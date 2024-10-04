@@ -6,21 +6,22 @@ const http = require("http");
 const socketIo = require("socket.io");
 const { taskRouter } = require("./routes/task/task.router");
 const { userRouter } = require("./routes/user/user.router");
-
+var path = require("path")
 const app = express();
 
 console.log = function() {}
 // Middleware
 app.use(cors({
-    origin: "http://localhost:3000", // Allow requests from this origin
+    origin: "*", // Allow requests from this origin
     credentials: true // Allow credentials
 }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname ,"dist")));
 
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
-        origin: "http://localhost:3000", // Allow requests from this origin
+        origin: "*", // Allow requests from this origin
         methods: ['GET', 'POST'], // Allowed methods
         credentials: true // Allow credentials (cookies, headers)
     },
@@ -40,6 +41,18 @@ mongoose.connect(
 app.use("/api", taskRouter);
 app.use("/api", userRouter);
 
+
+app.get("/*", (req, res) => {
+    return res.sendFile(path.join(__dirname, "dist", "index.html"));
+  });
+
+  // Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// server build
 // Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('New client connected');

@@ -17,8 +17,8 @@ const TaskForm = ({ onCreateTask, setForm, userId }) => {
         // <Modal>
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="fixed inset-0 bg-black opacity-50" ></div>
-            <div className="bg-white rounded-lg shadow-lg z-10 overflow-hidden w-1/3">
-                <div className="p-4 border-b">
+            <div className="bg-white rounded-lg shadow-lg z-10 overflow-hidden md:w-1/3 sm:w-full">
+                <div className="sm:p-3 p-4 border-b">
                     <button className="text-gray-500" onClick={() => setForm((prev) => ({...prev, state: false}))}>
                         &times; {/* Close button */}
                     </button>

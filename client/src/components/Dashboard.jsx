@@ -27,7 +27,7 @@ const Dashboard = () => {
   }
 //   console.log("task status", status)
   useEffect(() => {
-    const socket = io('http://localhost:9000');
+    const socket = io('http://18.194.232.215:9000');
     // console.log("user object =>>", user)
     const fetchTasks = async () => {
       const response = await axios.get(`/api/tasks?id=${user._id}&role=${user.role}`, {
