@@ -2,6 +2,7 @@ import React from 'react';
 import TaskItem from './TaskItem';
 
 const TaskList = ({ tasks }) => {
+  // console.log(tasks)
   const groupedTasks = tasks.reduce((acc, task) => {
     acc[task.status] = [...(acc[task.status] || []), task];
     return acc;

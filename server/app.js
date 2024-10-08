@@ -61,7 +61,13 @@ io.on('connection', (socket) => {
     socket.on('taskUpdate', (data) => {
         io.emit('taskUpdated', data);
     });
-
+    socket.on("commentAdded", (data) => {
+        console.log(data)
+        io.emit("commentAdded", data)
+    })
+    socket.on("commentDeleted", (data) => {
+        io.emit("commentDeleted", data);
+    })
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });

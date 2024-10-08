@@ -47,7 +47,7 @@ const TaskForm = ({ onCreateTask, setForm, userId }) => {
                                 rows="3"
                             ></textarea>
                         </div>
-                        <div className="mb-4">
+                        {/* <div className="mb-4">
                             <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700">Assign To (User ID)</label>
                             <input
                                 type="text"
@@ -56,7 +56,7 @@ const TaskForm = ({ onCreateTask, setForm, userId }) => {
                                 disabled={true}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             />
-                        </div>
+                        </div> */}
                         <button 
                         type="submit" 
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">

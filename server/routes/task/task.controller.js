@@ -66,7 +66,7 @@ module.exports = {
     createComments: async (req, res) => {
         const { id } = req.params; // Task ID to which the comment is being added
         const { text, username } = req.body; // The comment text
-
+        const io = req.app.get("socketio")
         try {
             // Find the task by its ID and push a new comment into the comments array
             const task = await Task.findByIdAndUpdate(
@@ -89,11 +89,34 @@ module.exports = {
             }
             console.log(task)
             // Return the updated task with a success message
+            io.emit("commentAdded", task)
             res.status(200).json({ result: 1, task });
         } catch (e) {
             console.error(e); // Log the error for debugging
             res.status(500).json({ result: 0, message: e.message });
         }
+    },
+    deleteComment: async (req, res) => {
+        console.log(req.params)
+        const { commentId, taskId } = req.params;
+        try {
+            const deletedComment = await Task.findByIdAndUpdate(
+                taskId,
+                { '$pull':  {'comments': { '_id':  commentId}}},
+                {new: true}
+            );
+            if(!deletedComment) return res.json({
+                result: 0,
+                message: "Task not found"
+            });
+            const io = req.app.get("socketio");
+            io.emit("commentDeleted", deletedComment);
+            return res.json({
+                result: 0,
+                message: 'comment delete successfully'
+            })
+        } catch (e) {
+            res.status(500).json({messgae: e.message})
+        }
     }
-
 }

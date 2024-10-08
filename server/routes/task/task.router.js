@@ -1,5 +1,5 @@
 const { authentication } = require("../../middlewares/auth");
-const { createTask, getTasks, updateTask, createComments } = require("./task.controller");
+const { createTask, getTasks, updateTask, createComments, deleteComment } = require("./task.controller");
 
 const router = require("express").Router();
 
@@ -12,5 +12,8 @@ router.post("/tasks", authentication, createTask)
 router.get("/tasks", authentication, getTasks) //?role=user
 router.put("/tasks/:id", authentication, updateTask)
 router.post("/tasks/:id/comment", authentication,  createComments)
+router.delete('/comment/:commentId/:taskId/delete', authentication, deleteComment)
 
 module.exports = {taskRouter: router}
+
+// /api/comment/${commentId}/${taskId}/delete

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Cookies from "js-cookie"
 
@@ -11,11 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [status, setTaskStatus] = useState(null);
-
+  const [commentUpdated, setCommentUpdated] = useState(0);
+  const [comment, setComment] = useState({})
+  const commentRef = useRef({});
   useEffect(() => {
     const userCookie = Cookies.get("user");
     // console.log({userCookie})
-    if(userCookie) {
+    if (userCookie) {
       const user = JSON.parse(userCookie);
       // console.log("local storage user =>>>>>>", user)
       if (user) {
@@ -37,7 +39,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error fetching users:", error);
     }
   };
-  
+
   const login = async (credentials) => {
     setLoading(true);
     try {
@@ -46,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       // console.log("token =>>>>>>", data);
       // localStorage.setItem('token', data.token);
       Cookies.set("user", JSON.stringify({ ...data.user, token: data.token }), {
-        expires: 1/24
+        expires: 1 / 24
       });
       setUser({ ...data.user, token: data.token }); // Assuming the login response contains the user info
       await fetchUsers(data.token); // Fetch the user list after logging in
@@ -83,13 +85,43 @@ export const AuthProvider = ({ children }) => {
       console.log(e)
     }
   };
+  const handelComment = async (taskId) => {
+    if(comment[taskId].length <= 0) return;
+    // setLoading(true)
+    try {
+      const response = await axios.post(`/api/tasks/${taskId}/comment`,
+        { text: comment[taskId], username: user.username },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        });
+      const data = await response.data;
+      if (data.result === 1) {
+        setComment((prev) => ({...prev, [taskId]: ""}))
+      }
+    } catch (e) {
+    } finally {
+      // setLoading(false)
+    }
+  }
 
- 
-  // console.log({
-  //   user,
-  //   userList,
-  // });
-
+  const handelDeleteComment = async (commentId, taskId) => {
+    try {
+      const resp = await axios.delete(
+        `/api/comment/${commentId}/${taskId}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+      const data = await resp.data;
+      console.log("comment data =>", data)
+    } catch (e) {
+      console.log(e)
+    }
+  } 
   return (
     <AuthContext.Provider value={{
       user,
@@ -99,6 +131,12 @@ export const AuthProvider = ({ children }) => {
       loading,
       status,
       handleStatusChange,
+      commentUpdated,
+      handelComment,
+      // setComment,
+      handelDeleteComment,
+      comment, 
+      setComment
     }}>
       {children}
     </AuthContext.Provider>
