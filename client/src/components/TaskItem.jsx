@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 const TaskItem = ({ task }) => {
     const [comment, setComment] = useState("")
     const { user, handleStatusChange } = useAuth();
-
+    console.log({task})
     const handleAddComment = async (e) => {
         await axios.post(`/api/tasks/${task._id}/comment`, { text: comment, username: user.username }, {
             headers: { Authorization: `Bearer ${user.token}` }
@@ -17,6 +17,9 @@ const TaskItem = ({ task }) => {
     }, [comment])
     return (
         <div className="bg-gray-100 p-4 mb-4 rounded">
+            <h1 className="font-semibold bg-blue-400 rounded-sm font-mono px-2 py-1 uppercase text-white">
+                {task.assignedTo.username}
+            </h1>
             <h3 className="font-semibold">{task.title}</h3>
             <p className="text-sm text-gray-600">{task.description}</p>
             <div className="mt-2">

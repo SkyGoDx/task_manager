@@ -8,9 +8,10 @@ const { taskRouter } = require("./routes/task/task.router");
 const { userRouter } = require("./routes/user/user.router");
 var path = require("path")
 const app = express();
-
+const morgan = require("morgan")
 console.log = function() {}
 // Middleware
+app.use(morgan("dev"));
 app.use(cors({
     origin: "*", // Allow requests from this origin
     credentials: true // Allow credentials

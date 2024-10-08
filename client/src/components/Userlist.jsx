@@ -25,7 +25,7 @@ const UserList = ({ onAssignTask, setForm }) => {
                     {userList.map((user, index) => (
                         <tr key={user._id} className="border-b hover:bg-gray-100">
                             <td className="py-3 px-4">{index + 1}</td>
-                            <td className="py-3 px-4 text-mono text-bold text-lg">{user.username}</td>
+                            <td className="rounded-sm font-mono px-2 py-1 uppercase text-blue-500 font-bold">{user.username}</td>
                             <td className="py-3 px-4">
                                 <button
                                     className="bg-green-500 sm:text-xs text-white px-1 md:px-4 md:py-2  py-1 rounded hover:bg-green-600"
