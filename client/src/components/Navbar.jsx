@@ -32,7 +32,7 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="ml-4 flex items-center md:ml-6"> {/* Removed hidden class */}
-                        <span className="text-gray-300 mr-4">{user?.username.toUpperCase()}</span>
+                        <span className="text-gray-300 mr-4">{user?.username?.toUpperCase()}</span>
                         {(location.pathname === "/login" || location.pathname === "/register")? (
                             ""
                         ) : (

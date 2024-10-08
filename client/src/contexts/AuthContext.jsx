@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from "js-cookie"
 
 const AuthContext = createContext();
 
@@ -7,26 +8,21 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [status, setTaskStatus] = useState(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    // console.log("local storage user =>>>>>>", user)
-    if (user) {
-      setUser(user)
-      fetchUsers(user.token)
-    }
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUsers(token);
-      fetchCurrentUser(token);
-    } else {
-      setLoading(false);
+    const userCookie = Cookies.get("user");
+    // console.log({userCookie})
+    if(userCookie) {
+      const user = JSON.parse(userCookie);
+      // console.log("local storage user =>>>>>>", user)
+      if (user) {
+        setUser(user)
+        fetchUsers(user.token)
+        // fetchCurrentUser(user.token);
+      }
     }
   }, []);
 
@@ -41,21 +37,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error fetching users:", error);
     }
   };
-
-  const fetchCurrentUser = async (token) => {
-    try {
-      const response = await axios.get('/api/currentUser', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(response.data); // Assuming the response contains the current user's info
-    } catch (error) {
-      // console.error("Error fetching current user:", error);
-      localStorage.removeItem('user');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   const login = async (credentials) => {
     setLoading(true);
     try {
@@ -63,7 +45,9 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       // console.log("token =>>>>>>", data);
       // localStorage.setItem('token', data.token);
-      localStorage.setItem("user", JSON.stringify({ ...data.user, token: data.token }));
+      Cookies.set("user", JSON.stringify({ ...data.user, token: data.token }), {
+        expires: 1/24
+      });
       setUser({ ...data.user, token: data.token }); // Assuming the login response contains the user info
       await fetchUsers(data.token); // Fetch the user list after logging in
       return [null, null];
@@ -79,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    Cookies.remove('user');
     setUser(null);
     setUserList([]); // Clear the user list on logout
   };

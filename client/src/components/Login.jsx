@@ -8,11 +8,12 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login, loading, user } = useAuth();
- useEffect(() => {
-    if(user) [
-        navigate('/dashboard')
-    ]
- })
+  // console.log("user in login => ", user);
+  useEffect(() => {
+    if(user) {
+      navigate("/dashboard")
+    }
+  }, [])
   const handleSubmit = async (e) => {
     e.preventDefault();
       const [err, result]= await login({ username, password });
