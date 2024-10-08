@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   const handleStatusChange = async (task, newStatus) => {
     // console.log(task, "taskkkkkkkkkkkkkkkkkkkkkkkkk")
     try {
-      const res = await axios.put(`/api/tasks/${task.assignedTo._id}`, { status: newStatus }, {
+      const res = await axios.put(`/api/tasks/${task._id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       const data = await res.data;

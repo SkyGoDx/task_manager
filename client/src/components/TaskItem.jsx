@@ -5,7 +5,7 @@ import { MdDeleteOutline } from "react-icons/md";
 const TaskItem = ({ task }) => {
     const { user, handleStatusChange, handelComment, loading, setComment, handelDeleteComment } = useAuth();
     const [taskButton, setTaskbuttons] = useState(null);
-
+    // console.log({task})
     useEffect(() => {
         setTaskbuttons(task.assignedTo._id !== user._id);
     }, [task.assignedTo._id, user._id]);
@@ -50,16 +50,16 @@ const TaskItem = ({ task }) => {
                             <div className="flex justify-between items-center gap-1">
                                 <p className="text-sm font-medium text-gray-800 flex-1">{comment.username}</p>
                                 <span className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</span>
-                                    {
-                                    taskButton ?
-                                    <span className="text-red-500 cursor-pointer">
-                                         <MdDeleteOutline 
-                                    disabled={taskButton}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                            handelDeleteComment(comment._id, task._id)
-                                    }}/> 
-                                    </span> : ""}
+                                {
+                                    comment.username === user.username ?
+                                        <span className="text-red-500 cursor-pointer">
+                                            <MdDeleteOutline
+                                                disabled={taskButton}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handelDeleteComment(comment._id, task._id)
+                                                }} />
+                                        </span> : ""}
                             </div>
                             <p className="text-sm text-gray-600">{comment.text}</p>
                         </div>

@@ -48,8 +48,8 @@ module.exports = {
         const { status } = req.body; // complete or in progress 
         console.log("new status =>>>>>>>", status, req.params.id)
         try {
-            const task = await Task.findOneAndUpdate(
-                { assignedTo: req.params.id },
+            const task = await Task.findByIdAndUpdate(
+                req.params.id,
                 { '$set': { status } },
                 { new: true }
             );

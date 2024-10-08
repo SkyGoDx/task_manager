@@ -44,7 +44,7 @@ const Dashboard = () => {
     socket.on('taskUpdated', (updatedTask) => {
       setTasks(prevTasks =>
         prevTasks.map(task =>
-          task._id === updatedTask._id ? updatedTask : task
+          task._id === updatedTask._id ? {...task, status: updatedTask.status} : task
         )
       );
     });
@@ -52,7 +52,7 @@ const Dashboard = () => {
     // real time comment event
     socket.on("commentAdded", (updatedComment) => {
       setTasks((prev) => prev.map(task =>
-        task._id === updatedComment._id ? updatedComment : task
+        task._id === updatedComment._id ? {...task, comments: updatedComment.comments} : task
       ))
     });
 
